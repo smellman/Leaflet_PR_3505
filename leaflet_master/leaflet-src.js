@@ -1,5 +1,5 @@
 /*
- Leaflet 1.0-dev (d45c7dd), a JS library for interactive maps. http://leafletjs.com
+ Leaflet 1.0-dev (bd1b88c), a JS library for interactive maps. http://leafletjs.com
  (c) 2010-2015 Vladimir Agafonkin, (c) 2010-2011 CloudMade
 */
 (function (window, document, undefined) {
@@ -2806,6 +2806,10 @@ L.GridLayer = L.Layer.extend({
 	_pruneTiles: function () {
 		var key, tile;
 
+		var zoom = this._map.getZoom();
+		if (zoom > this.options.maxZoom ||
+			zoom < this.options.minZoom) { return this._removeAllTiles(); }
+
 		for (key in this._tiles) {
 			tile = this._tiles[key];
 			tile.retain = tile.current;
@@ -2969,11 +2973,11 @@ L.GridLayer = L.Layer.extend({
 		// TODO move to reset
 		// var zoom = this._map.getZoom();
 
-		// if (zoom > this.options.maxZoom ||
-		//     zoom < this.options.minZoom) { return; }
-
 		if (center === undefined) { center = map.getCenter(); }
 		if (zoom === undefined) { zoom = Math.round(map.getZoom()); }
+
+		if (zoom > this.options.maxZoom ||
+			zoom < this.options.minZoom) { return; }
 
 		var pixelBounds = map.getPixelBounds(center, zoom),
 			tileRange = this._pxBoundsToTileRange(pixelBounds),

@@ -1,0 +1,52 @@
+<DOCTYPE html>
+<html>
+  <head>
+    <title>Leaflet: outOfZoomTileUrl proposal</title>
+    <link rel="stylesheet" href="./leaflet_zoomtest/leaflet.css" />
+    <script src="./leaflet_zoomtest/leaflet-src.js"></script>
+    <style>
+     #map { height: 80%; width: 100%;}
+    </style>
+    <script>
+     var map;
+     var marker;
+     var init = function() {
+       var zoom = 10;
+
+       map = L.map('map', {
+         maxZoom: 12,
+         minZoom: 8,
+         crs: L.CRS.Simple
+       });
+       map.setView(map.unproject([512, 512], zoom), zoom);
+       
+       var southWest = map.unproject([0, 4096], 12);
+       var northEast = map.unproject([4096, 0], 12);
+       map.setMaxBounds(new L.LatLngBounds(southWest, northEast));
+       
+       var layer1 = L.tileLayer('http://tiles.smellman.org/red/{z}/{x}_{y}.png', {
+         attribution: 'Map data &copy;',
+         continuousWorld: true,
+         zIndex: 2,
+         minZoom: 8,
+         maxZoom: 11,
+         opacity: 0.5,
+         outOfZoomTileUrl: './empty.png'
+       }).addTo(map);
+       var layer2 = L.tileLayer('http://tiles.smellman.org/takano32_test/{z}/{x}_{y}.png', {
+         attribution: 'Map data &copy;',
+         continuousWorld: true,
+         zIndex: 1,
+         minZoom: 11,
+         maxZoom: 12,
+         outOfZoomTileUrl: './empty.png'
+       }).addTo(map);
+     };
+     
+    </script>
+  </head>
+  <body onload="init();">
+    <h1>Leaflet: outOfZoomTileUrl proposal </h1>
+    <div id="map"></div>
+  </body>
+</html>
